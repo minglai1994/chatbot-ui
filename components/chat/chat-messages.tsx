@@ -14,6 +14,7 @@ export const ChatMessages: FC<ChatMessagesProps> = ({}) => {
   const [editingMessage, setEditingMessage] = useState<Tables<"messages">>()
 
   return chatMessages
+    .filter(chatMessage => chatMessage.message.chat_id !== "")
     .sort((a, b) => a.message.sequence_number - b.message.sequence_number)
     .map((chatMessage, index, array) => {
       const messageFileItems = chatFileItems.filter(
@@ -21,7 +22,6 @@ export const ChatMessages: FC<ChatMessagesProps> = ({}) => {
           chatMessage.fileItems.includes(chatFileItem.id) &&
           self.findIndex(item => item.id === chatFileItem.id) === _
       )
-
       return (
         <Message
           key={chatMessage.message.sequence_number}

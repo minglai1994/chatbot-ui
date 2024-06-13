@@ -17,10 +17,16 @@ import {
   handleCreateMessages,
   handleHostedChat,
   handleLocalChat,
+  handleMindWellChat,
   handleRetrieval,
   processResponse,
   validateChatSettings
 } from "../chat-helpers"
+
+interface History {
+  role: string
+  content: string
+}
 
 export const useChatHandler = () => {
   const router = useRouter()
@@ -321,15 +327,26 @@ export const useChatHandler = () => {
             setToolInUse
           )
         } else {
-          generatedText = await handleHostedChat(
+          let history: History[] = []
+          chatMessages = payload.chatMessages
+          chatMessages.forEach(messages => {
+            history.push({
+              role: messages.message.role,
+              content: messages.message.content
+            })
+          })
+          let request = {
+            prompt2: payload.chatSettings.prompt,
+            history2: history
+          }
+          console.log(request)
+          generatedText = await handleMindWellChat(
             payload,
             profile!,
-            modelData!,
+            chatSettings!,
             tempAssistantChatMessage,
             isRegeneration,
             newAbortController,
-            newMessageImages,
-            chatImages,
             setIsGenerating,
             setFirstTokenReceived,
             setChatMessages,

@@ -144,6 +144,101 @@ export const createTempMessages = (
   }
 }
 
+export const fetchMindWellChatResponse = async () => {
+  let test = Math.random()
+  const response = {
+    response: "Hello, how are you doing today?" + test,
+    history: [
+      {
+        role: "system",
+        content:
+          "Now, you assume the role of a professional psychological counselor with extensive knowledge in psychology and mental health. You excel in employing a variety of counseling techniques, such as principles of cognitive-behavioral therapy, motivational interviewing skills, and solution-focused brief therapy. With a warm and empathetic tone, demonstrate profound understanding and empathy towards the visitor's feelings. Engage in a natural conversation with the visitor, avoiding responses that are too lengthy or too short, ensuring that the replies are smooth and resemble human-like dialogue. Offer in-depth guidance and insights, using specific psychological concepts and examples to help the visitor delve deeper into their thoughts and feelings. Avoid instructive responses, placing more emphasis on empathy and respecting the visitor's feelings. Adjust your responses based on the visitor's feedback to ensure they align with the visitor's situation and needs. If the retrieved relevant document is not None, I will use external knowledge to support the content generation but will not mention that the answer is generated from documents; if the relevant document is None, I will ignore the external knowledge and solely rely on pretraining knowledge. I will combine my own thinking to generate responses and will not blindly rely on the document content."
+      },
+      {
+        role: "user",
+        content:
+          "User: What are the benefits and potential drawbacks of combining medication with psychotherapy in the treatment of depression and anxiety disorders?, User current emotion: neutral, Relevant documents that might helpful: The most relevant results found in the vector store are:"
+      },
+      {
+        role: "assistant",
+        metadata: "",
+        content: "Hello, how are you doing today?"
+      }
+    ],
+    status: 200,
+    time: "2024-06-07 21:21:25"
+  }
+  return response
+}
+
+interface History {
+  role: string
+  content: string
+}
+
+interface myResponse {
+  response: string
+  history: History[]
+}
+
+export const mindWellProcessResponse = async (
+  response: myResponse,
+  lastChatMessage: ChatMessage,
+  isHosted: boolean,
+  controller: AbortController,
+  setFirstTokenReceived: React.Dispatch<React.SetStateAction<boolean>>,
+  setChatMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>,
+  setToolInUse: React.Dispatch<React.SetStateAction<string>>
+) => {
+  setChatMessages(prev =>
+    prev.map(chatMessage => {
+      if (chatMessage.message.id === lastChatMessage.message.id) {
+        const updatedChatMessage: ChatMessage = {
+          message: {
+            ...chatMessage.message,
+            content: response.response
+          },
+          fileItems: chatMessage.fileItems
+        }
+
+        return updatedChatMessage
+      }
+
+      return chatMessage
+    })
+  )
+
+  return response.response
+}
+
+export const handleMindWellChat = async (
+  payload: ChatPayload,
+  profile: Tables<"profiles">,
+  chatSettings: ChatSettings,
+  tempAssistantMessage: ChatMessage,
+  isRegeneration: boolean,
+  newAbortController: AbortController,
+  setIsGenerating: React.Dispatch<React.SetStateAction<boolean>>,
+  setFirstTokenReceived: React.Dispatch<React.SetStateAction<boolean>>,
+  setChatMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>,
+  setToolInUse: React.Dispatch<React.SetStateAction<string>>
+) => {
+  const formattedMessages = await buildFinalMessages(payload, profile, [])
+  const response = await fetchMindWellChatResponse()
+
+  return await mindWellProcessResponse(
+    response,
+    isRegeneration
+      ? payload.chatMessages[payload.chatMessages.length - 1]
+      : tempAssistantMessage,
+    false,
+    newAbortController,
+    setFirstTokenReceived,
+    setChatMessages,
+    setToolInUse
+  )
+}
+
 export const handleLocalChat = async (
   payload: ChatPayload,
   profile: Tables<"profiles">,
@@ -208,9 +303,12 @@ export const handleHostedChat = async (
 
   let draftMessages = await buildFinalMessages(payload, profile, chatImages)
 
-  let formattedMessages : any[] = []
+  let formattedMessages: any[] = []
   if (provider === "google") {
-    formattedMessages = await adaptMessagesForGoogleGemini(payload, draftMessages)
+    formattedMessages = await adaptMessagesForGoogleGemini(
+      payload,
+      draftMessages
+    )
   } else {
     formattedMessages = draftMessages
   }
