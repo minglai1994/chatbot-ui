@@ -23,6 +23,21 @@ import React from "react"
 import { toast } from "sonner"
 import { v4 as uuidv4 } from "uuid"
 
+interface History {
+  role: string
+  content: string
+}
+
+interface myResponse {
+  response: string
+  history: History[]
+}
+
+interface requestParams {
+  prompt: string
+  history: History[]
+}
+
 export const validateChatSettings = (
   chatSettings: ChatSettings | null,
   modelData: LLM | undefined,
@@ -144,7 +159,8 @@ export const createTempMessages = (
   }
 }
 
-export const fetchMindWellChatResponse = async () => {
+export const fetchMindWellChatResponse = async (params: requestParams) => {
+  // console.log(params)
   let test = Math.random()
   const response = {
     response: "Hello, how are you doing today?" + test,
@@ -169,16 +185,6 @@ export const fetchMindWellChatResponse = async () => {
     time: "2024-06-07 21:21:25"
   }
   return response
-}
-
-interface History {
-  role: string
-  content: string
-}
-
-interface myResponse {
-  response: string
-  history: History[]
 }
 
 export const mindWellProcessResponse = async (
@@ -221,10 +227,12 @@ export const handleMindWellChat = async (
   setIsGenerating: React.Dispatch<React.SetStateAction<boolean>>,
   setFirstTokenReceived: React.Dispatch<React.SetStateAction<boolean>>,
   setChatMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>,
-  setToolInUse: React.Dispatch<React.SetStateAction<string>>
+  setToolInUse: React.Dispatch<React.SetStateAction<string>>,
+  params: requestParams
 ) => {
   const formattedMessages = await buildFinalMessages(payload, profile, [])
-  const response = await fetchMindWellChatResponse()
+
+  const response = await fetchMindWellChatResponse(params)
 
   return await mindWellProcessResponse(
     response,

@@ -264,7 +264,7 @@ export const useChatHandler = () => {
           setChatMessages,
           selectedAssistant
         )
-
+      console.log(tempUserChatMessage)
       let payload: ChatPayload = {
         chatSettings: chatSettings!,
         workspaceInstructions: selectedWorkspace!.instructions || "",
@@ -275,7 +275,7 @@ export const useChatHandler = () => {
         messageFileItems: retrievedFileItems,
         chatFileItems: chatFileItems
       }
-
+      console.log(chatMessages)
       let generatedText = ""
 
       if (selectedTools.length > 0) {
@@ -328,6 +328,7 @@ export const useChatHandler = () => {
           )
         } else {
           let history: History[] = []
+          // console.log(payload.chatMessages)
           chatMessages = payload.chatMessages
           chatMessages.forEach(messages => {
             history.push({
@@ -335,11 +336,10 @@ export const useChatHandler = () => {
               content: messages.message.content
             })
           })
-          let request = {
-            prompt2: payload.chatSettings.prompt,
-            history2: history
+          let requestParam = {
+            prompt: payload.chatSettings.prompt,
+            history: history
           }
-          console.log(request)
           generatedText = await handleMindWellChat(
             payload,
             profile!,
@@ -350,7 +350,8 @@ export const useChatHandler = () => {
             setIsGenerating,
             setFirstTokenReceived,
             setChatMessages,
-            setToolInUse
+            setToolInUse,
+            requestParam
           )
         }
       }
