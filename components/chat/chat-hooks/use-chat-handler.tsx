@@ -264,7 +264,7 @@ export const useChatHandler = () => {
           setChatMessages,
           selectedAssistant
         )
-      console.log(tempUserChatMessage)
+
       let payload: ChatPayload = {
         chatSettings: chatSettings!,
         workspaceInstructions: selectedWorkspace!.instructions || "",
@@ -275,7 +275,7 @@ export const useChatHandler = () => {
         messageFileItems: retrievedFileItems,
         chatFileItems: chatFileItems
       }
-      console.log(chatMessages)
+
       let generatedText = ""
 
       if (selectedTools.length > 0) {
@@ -329,7 +329,6 @@ export const useChatHandler = () => {
         } else {
           let history: History[] = []
           // console.log(payload.chatMessages)
-          chatMessages = payload.chatMessages
           chatMessages.forEach(messages => {
             history.push({
               role: messages.message.role,
