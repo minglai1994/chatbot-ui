@@ -162,29 +162,20 @@ export const createTempMessages = (
 export const fetchMindWellChatResponse = async (params: requestParams) => {
   // console.log(params)
   let test = Math.random()
-  const response = {
-    response: "Hello, how are you doing today?" + test,
-    history: [
-      {
-        role: "system",
-        content:
-          "Now, you assume the role of a professional psychological counselor with extensive knowledge in psychology and mental health. You excel in employing a variety of counseling techniques, such as principles of cognitive-behavioral therapy, motivational interviewing skills, and solution-focused brief therapy. With a warm and empathetic tone, demonstrate profound understanding and empathy towards the visitor's feelings. Engage in a natural conversation with the visitor, avoiding responses that are too lengthy or too short, ensuring that the replies are smooth and resemble human-like dialogue. Offer in-depth guidance and insights, using specific psychological concepts and examples to help the visitor delve deeper into their thoughts and feelings. Avoid instructive responses, placing more emphasis on empathy and respecting the visitor's feelings. Adjust your responses based on the visitor's feedback to ensure they align with the visitor's situation and needs. If the retrieved relevant document is not None, I will use external knowledge to support the content generation but will not mention that the answer is generated from documents; if the relevant document is None, I will ignore the external knowledge and solely rely on pretraining knowledge. I will combine my own thinking to generate responses and will not blindly rely on the document content."
-      },
-      {
-        role: "user",
-        content:
-          "User: What are the benefits and potential drawbacks of combining medication with psychotherapy in the treatment of depression and anxiety disorders?, User current emotion: neutral, Relevant documents that might helpful: The most relevant results found in the vector store are:"
-      },
-      {
-        role: "assistant",
-        metadata: "",
-        content: "Hello, how are you doing today?"
-      }
-    ],
-    status: 200,
-    time: "2024-06-07 21:21:25"
+  const requestBody = {
+    prompt: "你好",
+    history: []
   }
-  return response
+
+  const response = await fetch("http://127.0.0.1:6006/chatbot", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(params)
+  })
+  const data = await response.json()
+  return data
 }
 
 export const mindWellProcessResponse = async (

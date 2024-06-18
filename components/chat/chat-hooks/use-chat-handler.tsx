@@ -328,13 +328,15 @@ export const useChatHandler = () => {
           )
         } else {
           let history: History[] = []
-          // console.log(payload.chatMessages)
-          chatMessages.forEach(messages => {
+          console.log(payload.chatMessages)
+          console.log("=======================")
+          payload.chatMessages.forEach(messages => {
             history.push({
               role: messages.message.role,
               content: messages.message.content
             })
           })
+          console.log(history)
           let requestParam = {
             prompt: payload.chatSettings.prompt,
             history: history
