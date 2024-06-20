@@ -81,10 +81,27 @@ const GPT3_5Turbo: LLM = {
   }
 }
 
+// mindWellChat
+const MindWellChat: LLM = {
+  modelId: "MindWellChat",
+  modelName: "MindWellChat",
+  provider: "openai",
+  hostedId: "MindWellChat",
+  platformLink: OPENAI_PLATORM_LINK,
+  imageInput: false,
+  pricing: {
+    currency: "USD",
+    unit: "1M tokens",
+    inputCost: 0.5,
+    outputCost: 1.5
+  }
+}
+
 export const OPENAI_LLM_LIST: LLM[] = [
   GPT4o,
   GPT4Turbo,
   GPT4Vision,
   GPT4,
-  GPT3_5Turbo
+  GPT3_5Turbo,
+  MindWellChat
 ]

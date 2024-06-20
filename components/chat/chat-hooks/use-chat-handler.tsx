@@ -334,19 +334,20 @@ export const useChatHandler = () => {
                 .content
           }
           console.log(requestParam)
-          generatedText = await handleMindWellChat(
-            payload,
-            profile!,
-            chatSettings!,
-            tempAssistantChatMessage,
-            isRegeneration,
-            newAbortController,
-            setIsGenerating,
-            setFirstTokenReceived,
-            setChatMessages,
-            setToolInUse,
-            requestParam
-          )
+          // generatedText = await handleMindWellChat(
+          //   payload,
+          //   profile!,
+          //   chatSettings!,
+          //   tempAssistantChatMessage,
+          //   isRegeneration,
+          //   newAbortController,
+          //   setIsGenerating,
+          //   setFirstTokenReceived,
+          //   setChatMessages,
+          //   setToolInUse,
+          //   requestParam
+          // )
+          generatedText = "test"
         }
       }
 
@@ -395,6 +396,7 @@ export const useChatHandler = () => {
       setIsGenerating(false)
       setFirstTokenReceived(false)
     } catch (error) {
+      console.log(error)
       setIsGenerating(false)
       setFirstTokenReceived(false)
       setUserInput(startingInput)
