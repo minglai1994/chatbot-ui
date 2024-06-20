@@ -34,8 +34,7 @@ interface myResponse {
 }
 
 interface requestParams {
-  prompt: string
-  history: History[]
+  user_input: string
 }
 
 export const validateChatSettings = (

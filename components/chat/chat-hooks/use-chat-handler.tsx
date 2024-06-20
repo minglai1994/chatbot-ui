@@ -328,19 +328,12 @@ export const useChatHandler = () => {
           )
         } else {
           let history: History[] = []
-          console.log(payload.chatMessages)
-          console.log("=======================")
-          payload.chatMessages.forEach(messages => {
-            history.push({
-              role: messages.message.role,
-              content: messages.message.content
-            })
-          })
-          console.log(history)
           let requestParam = {
-            prompt: payload.chatSettings.prompt,
-            history: history
+            user_input:
+              payload.chatMessages[payload.chatMessages.length - 1].message
+                .content
           }
+          console.log(requestParam)
           generatedText = await handleMindWellChat(
             payload,
             profile!,
