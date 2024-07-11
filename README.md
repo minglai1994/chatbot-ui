@@ -1,5 +1,10 @@
 # Statement
 Our project is borrowed from https://github.com/mckaywrigley/chatbot-ui and made our changes in it, if you have any questions about the project deployment, please contact us or the author of the original project
+# Our Modifications
+- `index.ts` contains the code to get model responses.
+- `use_chat_handler.tsx` contains the code to handle user input
+- `openai-llm-list.ts` added our model name, MindWellChat
+- `llms.ts` added our model, MindWellChat
 # Chatbot UI
 
 <img src="./public/readme/screenshot.png" alt="Chatbot UI" width="600">
